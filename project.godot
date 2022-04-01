@@ -11,7 +11,12 @@ config_version=4
 [application]
 
 config/name="XR Hands On"
+run/main_scene="res://World.tscn"
 config/icon="res://icon.png"
+
+[gdnative]
+
+singletons=[ "res://addons/godot-openxr/config/godot_openxr.gdnlib" ]
 
 [physics]
 
@@ -19,4 +24,5 @@ common/enable_pause_aware_picking=true
 
 [rendering]
 
+quality/driver/driver_name="GLES2"
 environment/default_environment="res://default_env.tres"
