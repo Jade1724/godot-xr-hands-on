@@ -39,3 +39,12 @@ controller_id = 2
 skeleton = NodePath("../../LeftController")
 
 [node name="ARVRCamera" type="ARVRCamera" parent="ARVROrigin"]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Button" type="Button" parent="CanvasLayer"]
+margin_left = 467.0
+margin_top = 237.0
+margin_right = 532.0
+margin_bottom = 257.0
+text = "Enter VR"
