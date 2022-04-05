@@ -3,6 +3,9 @@ extends Spatial
 var webxr_interface
 var vr_supported = false
 
+export (PackedScene) var Capsule
+
+#== WebXR setups ====================================
 func _ready():
 	# We assume this node has a button as a child.
 	# This button is for the user to consent to entering immersive VR mode.
@@ -21,6 +24,17 @@ func _ready():
 		# (which we connected to the "session_supported" signal above) will
 		# be called sometime later to let us know if it's supported or not.
 		webxr_interface.is_session_supported("immersive-vr")
+		
+		webxr_interface.connect("select", self, "_webxr_on_select")
+		webxr_interface.connect("selectstart", self, "_webxr_on_select_start")
+		webxr_interface.connect("selectend", self, "_webxr_on_select_end")
+ 
+		webxr_interface.connect("squeeze", self, "_webxr_on_squeeze")
+		webxr_interface.connect("squeezestart", self, "_webxr_on_squeeze_start")
+		webxr_interface.connect("squeezeend", self, "_webxr_on_squeeze_end")
+		
+	$ARVROrigin/LeftController.connect("button_pressed", self, "_on_LeftController_button_pressed")
+	$ARVROrigin/LeftController.connect("button_release", self, "_on_LeftController_button_release")
 
 func _webxr_session_supported(session_mode, supported):
 	if session_mode == 'immersive-vr':
@@ -71,3 +85,48 @@ func _webxr_session_ended():
 
 func _webxr_session_failed(message):
 	OS.alert("Failed to initialize: " + message)
+	
+	
+#== In-VR input handlers =================================
+	
+func _on_LeftController_button_pressed(button: int) -> void:
+	print ("Button pressed: " + str(button))
+	var capsule = Capsule.instance()
+	add_child(capsule)
+ 
+func _on_LeftController_button_release(button: int) -> void:
+	print ("Button release: " + str(button))
+
+func _process(delta: float) -> void:
+	var left_controller_id = 100
+	var thumbstick_x_axis_id = 2
+	var thumbstick_y_axis_id = 3
+
+	var thumbstick_vector := Vector2(
+		Input.get_joy_axis(left_controller_id, thumbstick_x_axis_id),
+		Input.get_joy_axis(left_controller_id, thumbstick_y_axis_id))
+
+	if thumbstick_vector != Vector2.ZERO:
+		print ("Left thumbstick position: " + str(thumbstick_vector))
+		
+func _webxr_on_select(controller_id: int) -> void:
+	print("Select: " + str(controller_id))
+ 
+	var controller: ARVRPositionalTracker = webxr_interface.get_controller(controller_id)
+	print (controller.get_orientation())
+	print (controller.get_position())
+ 
+func _webxr_on_select_start(controller_id: int) -> void:
+	print("Select Start: " + str(controller_id))
+ 
+func _webxr_on_select_end(controller_id: int) -> void:
+	print("Select End: " + str(controller_id))
+ 
+func _webxr_on_squeeze(controller_id: int) -> void:
+	print("Squeeze: " + str(controller_id))
+ 
+func _webxr_on_squeeze_start(controller_id: int) -> void:
+	print("Squeeze Start: " + str(controller_id))
+ 
+func _webxr_on_squeeze_end(controller_id: int) -> void:
+	print("Squeeze End: " + str(controller_id))

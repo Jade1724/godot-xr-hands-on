@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://World.gd" type="Script" id=1]
+[ext_resource path="res://Capsule.tscn" type="PackedScene" id=2]
 
 [sub_resource type="SphereMesh" id=1]
 
@@ -8,21 +9,28 @@
 
 [sub_resource type="PrismMesh" id=3]
 
+[sub_resource type="PlaneMesh" id=4]
+size = Vector2( 100, 100 )
+
+[sub_resource type="PlaneShape" id=5]
+plane = Plane( 50, 1, 500, 0 )
+
 [node name="World" type="Spatial"]
 script = ExtResource( 1 )
+Capsule = ExtResource( 2 )
 
 [node name="MeshInstance" type="MeshInstance" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -8.75357 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.48219, -8.75357 )
 mesh = SubResource( 1 )
 material/0 = null
 
 [node name="MeshInstance2" type="MeshInstance" parent="."]
-transform = Transform( 0.614189, 0.536698, -0.578555, -0.658006, 0.753012, 0, 0.435659, 0.380693, 0.815643, -3.6287, 0, -4.81357 )
+transform = Transform( 0.614189, 0.536698, -0.578555, -0.658006, 0.753012, 0, 0.435659, 0.380693, 0.815643, -3.6287, 0.876689, -4.81357 )
 mesh = SubResource( 2 )
 material/0 = null
 
 [node name="MeshInstance3" type="MeshInstance" parent="."]
-transform = Transform( 10.5459, 0, 0, 0, 10.5459, 0, 0, 0, 1, 16.6509, 0, -17.3041 )
+transform = Transform( 10.5459, 0, 0, 0, 10.5459, 0, 0, 0, 1, 16.6509, 11.7738, -17.3041 )
 mesh = SubResource( 3 )
 material/0 = null
 
@@ -48,3 +56,12 @@ margin_top = 237.0
 margin_right = 532.0
 margin_bottom = 257.0
 text = "Enter VR"
+
+[node name="Floor" type="StaticBody" parent="."]
+
+[node name="MeshInstance" type="MeshInstance" parent="Floor"]
+mesh = SubResource( 4 )
+material/0 = null
+
+[node name="CollisionShape" type="CollisionShape" parent="Floor"]
+shape = SubResource( 5 )
